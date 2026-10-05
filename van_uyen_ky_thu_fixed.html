@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Văn Uyển Kỳ Thư - Không Gian Thư Pháp & Văn Chương Đích Thực</title>
+    <!-- Tailwind CSS CDN -->
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=V_KBYxe1o1NEOFdjECAIFiDLx6a9s9grgJP1PpjqwLqjc3ZN2A9BOmUBzgdQH0fl8cp64gmH692BjG-E-RNjhiEk-B0nxXwrOxWJL01GfHG7dnC9QX1dq-tAPBbaGzgkn_Y1QiAqE2l_KWTuO_GyyDAa7FmOav3yKeVJJUpgUmosLl2bpfJ1wLLKuP0CDFCLRg5NrbZSgok_ye-sNFhm8OieiPzE--Mnl6zaB2EU9AZSIlkohRYdJ4xWGoZlCCQxvc8C3G9MrzUF5DYKK_ZPDKWaQvFcxmlZ3kypy0xilWvTv7sLQF4sSWwaDuyKRTuOr3CrCEtmDEC-1pL3ujVyKg" charset="UTF-8"></script><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        wineDark: '#2E0206',
+                        wineRed: '#4A040D',
+                        wineLight: '#7A0E1A',
+                        goldAccent: '#C5A059',
+                        goldLight: '#E8D4B2',
+                        parchment: '#FDFBF7',
+                        inkDark: '#1F120D'
+                    },
+                    fontFamily: {
+                        cormorant: ['"Cormorant Garamond"', 'serif'],
+                        lora: ['"Lora"', 'serif'],
+                        calligraphy: ['"Great Vibes"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .bg-watercolor-hero {
+            background: linear-gradient(135deg, rgba(46, 2, 6, 0.95), rgba(74, 4, 13, 0.90)), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" opacity="0.08"><path d="M60 10 C30 30 10 50 10 75 C10 100 30 110 60 110 C90 110 110 100 110 75 C110 50 90 30 60 10 Z" fill="none" stroke="%23C5A059" stroke-width="1.5"/></svg>');
+            background-size: 140px 140px;
+        }
+        .dot-grid {
+            background-image: radial-gradient(#C5A059 1.2px, transparent 1.2px);
+            background-size: 32px 32px;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        /* Hiệu ứng gợn sóng khi click chuột */
+        .click-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(197,160,89,0.8) 0%, rgba(197,160,89,0) 70%);
+            transform: scale(0);
+            animation: rippleEffect 0.7s cubic-bezier(0, 0.2, 0.8, 1) forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        @keyframes rippleEffect {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        .ornate-border {
+            border: 2px solid #C5A059;
+            box-shadow: inset 0 0 15px rgba(197, 160, 89, 0.15), 0 4px 20px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body class="font-lora text-inkDark bg-white antialiased selection:bg-goldAccent selection:text-white">
+
+    <!-- HERO HEADER -->
+    <header class="relative min-h-[92vh] bg-watercolor-hero overflow-hidden flex flex-col justify-between text-white border-b-4 border-goldAccent">
+        <canvas id="petalCanvas"></canvas>
+
+        <!-- Top Navigation -->
+        <nav class="relative z-10 container mx-auto px-6 py-6 flex justify-between items-center border-b border-goldAccent/30">
+            <div class="flex items-center space-x-3">
+                <span class="text-3xl text-goldAccent font-cormorant font-bold tracking-wider drop-shadow">✒ Văn Uyển Kỳ Thư</span>
+            </div>
+            <div class="hidden lg:flex items-center space-x-6 font-cormorant text-lg tracking-wide">
+                <a href="#dichvu" class="hover:text-goldLight transition-colors">Danh Mục</a>
+                <a href="#thidan" class="hover:text-goldLight transition-colors">Thi Đàn</a>
+                <a href="#dientich" class="hover:text-goldLight transition-colors">Điển Tích</a>
+                <a href="#binhpham" class="hover:text-goldLight transition-colors">Bình Phẩm</a>
+                <a href="#tracnghiem" class="hover:text-goldLight transition-colors">Đố Vui</a>
+                <a href="#sangtac" class="hover:text-goldLight transition-colors">Góc Sáng Tác</a>
+                <button onclick="openAdminModal()" class="text-goldAccent border border-goldAccent px-4 py-1 rounded-full hover:bg-goldAccent hover:text-wineDark transition-all text-xs font-semibold tracking-widest uppercase">
+                    Admin
+                </button>
+            </div>
+            <div class="lg:hidden">
+                <button onclick="openAdminModal()" class="text-goldAccent border border-goldAccent px-3 py-1 rounded text-xs">Admin</button>
+            </div>
+        </nav>
+
+        <!-- Hero Content -->
+        <div class="relative z-10 container mx-auto px-6 py-16 text-center max-w-4xl my-auto">
+            <span class="inline-block px-5 py-2 mb-6 rounded-full bg-goldAccent/15 border border-goldAccent text-goldLight text-sm tracking-widest uppercase font-cormorant">
+                ✦ Không Gian Thư Pháp, Thi Đàn & Tri Thức Văn Chương ✦
+            </span>
+            <h1 class="text-5xl md:text-7xl font-cormorant font-bold mb-6 tracking-wide text-goldLight drop-shadow-lg">
+                Văn Uyển Kỳ Thư
+            </h1>
+            <p class="text-xl md:text-3xl font-calligraphy text-goldLight/90 max-w-2xl mx-auto mb-10 leading-relaxed">
+                "Thơ ngâm vịnh muôn đời lưu dấu ấn, sách tinh hoa rạng rỡ ánh kim cương."
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-5">
+                <a href="#dichvu" class="px-8 py-3.5 bg-goldAccent text-wineDark font-bold rounded-md hover:bg-goldLight transition-all shadow-xl font-cormorant text-xl tracking-wider">
+                    Khám Phá Tài Nguyên
+                </a>
+                <button onclick="openSubmitModal()" class="px-8 py-3.5 border-2 border-goldAccent text-goldLight font-bold rounded-md hover:bg-goldAccent/20 transition-all font-cormorant text-xl tracking-wider">
+                    + Đăng Bài Viết / Tác Phẩm
+                </button>
+            </div>
+        </div>
+
+        <div class="relative z-10 h-10 bg-gradient-to-t from-white to-transparent"></div>
+    </header>
+
+    <!-- CONTENT SECTION -->
+    <main class="bg-white text-inkDark py-16 dot-grid">
+        <div class="container mx-auto px-6 max-w-7xl">
+            
+            <!-- 1. HỆ THỐNG PHÂN MỤC DỊCH VỤ -->
+            <div id="dichvu" class="mb-24">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-goldAccent font-semibold tracking-widest uppercase text-sm font-cormorant">✦ HỆ THỐNG PHÂN MỤC TINH HOA ✦</span>
+                    <h2 class="text-4xl md:text-5xl font-cormorant font-bold text-wineRed mt-2 mb-4">Lục Đại Phân Mục Tri Thức</h2>
+                    <div class="w-28 h-1 bg-goldAccent mx-auto"></div>
+                    <p class="text-gray-600 mt-4 text-lg italic">Được tuyển chọn công phu, phục vụ đắc lực cho nghiên cứu và bồi dưỡng tâm hồn văn chương.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- 1 -->
+                    <div class="bg-parchment p-8 rounded-xl ornate-border hover:shadow-xl transition-all relative flex flex-col justify-between group">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-2xl font-cormorant font-bold text-wineRed group-hover:text-goldAccent transition-colors">1. Tư Vấn & Định Hướng</span>
+                                <span class="px-3 py-1 bg-green-700 text-white text-xs font-semibold rounded tracking-wider uppercase">Miễn Phí</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-700 text-sm border-t border-goldAccent/30 pt-4 font-lora">
+                                <li class="flex items-start">✒ <span class="ml-2">Tài liệu vỡ lòng, hệ thống kiến thức cơ bản cho người mới bắt đầu.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Góc giải đáp thắc mắc, nhận tư vấn trực tiếp phương pháp học Văn.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Định hướng chọn đề tài nghiên cứu, phân tích tác phẩm cơ bản.</span></li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-goldAccent/30 flex justify-between items-center">
+                            <span class="text-xs italic text-gray-500 font-cormorant">Hỗ trợ 24/7 qua Zalo</span>
+                            <a href="https://zalo.me/0974089207" target="_blank" class="px-4 py-2 bg-wineRed text-white text-xs font-bold rounded hover:bg-wineLight transition font-cormorant tracking-wider">Liên Hệ</a>
+                        </div>
+                    </div>
+
+                    <!-- 2 -->
+                    <div class="bg-parchment p-8 rounded-xl ornate-border hover:shadow-xl transition-all relative flex flex-col justify-between group">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-2xl font-cormorant font-bold text-wineRed group-hover:text-goldAccent transition-colors">2. Kho Tài Liệu LLVH & NLVH</span>
+                                <span class="px-3 py-1 bg-wineRed text-white text-xs font-semibold rounded tracking-wider uppercase">Từ 5k</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-700 text-sm border-t border-goldAccent/30 pt-4 font-lora">
+                                <li class="flex items-start">✒ <span class="ml-2">Hệ thống file Lý luận văn học (LLVH) chuyên sâu, sắc bén.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Bài văn mẫu đạt giải HSG cấp Tỉnh & Quốc gia (HSGQG).</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Bí quyết mổ xẻ đề nghị luận văn học và kho dẫn chứng phong phú.</span></li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-goldAccent/30 flex justify-between items-center">
+                            <span class="text-xs italic text-gray-500 font-cormorant">Tài nguyên độc quyền</span>
+                            <a href="https://zalo.me/0974089207" target="_blank" class="px-4 py-2 bg-wineRed text-white text-xs font-bold rounded hover:bg-wineLight transition font-cormorant tracking-wider">Nhận Tài Liệu</a>
+                        </div>
+                    </div>
+
+                    <!-- 3 -->
+                    <div class="bg-parchment p-8 rounded-xl ornate-border hover:shadow-xl transition-all relative flex flex-col justify-between group">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-2xl font-cormorant font-bold text-wineRed group-hover:text-goldAccent transition-colors">3. Nhận Định & Dẫn Chứng</span>
+                                <span class="px-3 py-1 bg-wineRed text-white text-xs font-semibold rounded tracking-wider uppercase">Từ 5k</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-700 text-sm border-t border-goldAccent/30 pt-4 font-lora">
+                                <li class="flex items-start">✒ <span class="ml-2">Tuyển tập danh ngôn & nhận định chuẩn xác từ các nhà văn lớn.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Phân loại nhận định theo chuyên đề: Thơ ca, truyện ngắn, nhân vật.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Trích dẫn nguồn uy tín giúp bài viết sắc sảo, thuyết phục.</span></li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-goldAccent/30 flex justify-between items-center">
+                            <span class="text-xs italic text-gray-500 font-cormorant">Cập nhật liên tục</span>
+                            <a href="https://zalo.me/0974089207" target="_blank" class="px-4 py-2 bg-wineRed text-white text-xs font-bold rounded hover:bg-wineLight transition font-cormorant tracking-wider">Nhận Tài Liệu</a>
+                        </div>
+                    </div>
+
+                    <!-- 4 -->
+                    <div class="bg-parchment p-8 rounded-xl ornate-border hover:shadow-xl transition-all relative flex flex-col justify-between group">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-2xl font-cormorant font-bold text-wineRed group-hover:text-goldAccent transition-colors">4. Đề Thi Thử & Dàn Ý</span>
+                                <span class="px-3 py-1 bg-wineRed text-white text-xs font-semibold rounded tracking-wider uppercase">Từ 5k</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-700 text-sm border-t border-goldAccent/30 pt-4 font-lora">
+                                <li class="flex items-start">✒ <span class="ml-2">Bộ đề thi thử bám sát cấu trúc ra đề mới nhất của Bộ GD&ĐT.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Dàn ý chi tiết từng câu hỏi, khai thác tứ thơ, mạch truyện độc đáo.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Gợi ý mở bài & kết bài ấn tượng, sáng tạo, đạt điểm tối đa.</span></li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-goldAccent/30 flex justify-between items-center">
+                            <span class="text-xs italic text-gray-500 font-cormorant">Tài liệu chọn lọc</span>
+                            <a href="https://zalo.me/0974089207" target="_blank" class="px-4 py-2 bg-wineRed text-white text-xs font-bold rounded hover:bg-wineLight transition font-cormorant tracking-wider">Nhận Tài Liệu</a>
+                        </div>
+                    </div>
+
+                    <!-- 5 -->
+                    <div class="bg-parchment p-8 rounded-xl ornate-border hover:shadow-xl transition-all relative flex flex-col justify-between group">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-2xl font-cormorant font-bold text-wineRed group-hover:text-goldAccent transition-colors">5. Nghị Luận Xã Hội</span>
+                                <span class="px-3 py-1 bg-wineRed text-white text-xs font-semibold rounded tracking-wider uppercase">Từ 5k</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-700 text-sm border-t border-goldAccent/30 pt-4 font-lora">
+                                <li class="flex items-start">✒ <span class="ml-2">Tuyển tập bài viết nghị luận xã hội đa chiều, giàu tính nhân văn.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Hệ thống dẫn chứng thời sự nóng hổi, xác thực và thuyết phục.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Kỹ năng tư duy phản biện và xây dựng luận điểm sắc sảo.</span></li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-goldAccent/30 flex justify-between items-center">
+                            <span class="text-xs italic text-gray-500 font-cormorant">Phát triển tư duy</span>
+                            <a href="https://zalo.me/0974089207" target="_blank" class="px-4 py-2 bg-wineRed text-white text-xs font-bold rounded hover:bg-wineLight transition font-cormorant tracking-wider">Nhận Tài Liệu</a>
+                        </div>
+                    </div>
+
+                    <!-- 6 -->
+                    <div class="bg-parchment p-8 rounded-xl ornate-border hover:shadow-xl transition-all relative flex flex-col justify-between group">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="text-2xl font-cormorant font-bold text-wineRed group-hover:text-goldAccent transition-colors">6. Góc Lắng Nghe & Tâm Sự</span>
+                                <span class="px-3 py-1 bg-green-700 text-white text-xs font-semibold rounded tracking-wider uppercase">Đồng Hành</span>
+                            </div>
+                            <ul class="space-y-3 text-gray-700 text-sm border-t border-goldAccent/30 pt-4 font-lora">
+                                <li class="flex items-start">✒ <span class="ml-2">Không gian sẻ chia tâm sự, giải tỏa áp lực học tập và thi cử.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Lắng nghe những nỗi niềm, câu chuyện cuộc sống chân thành.</span></li>
+                                <li class="flex items-start">✒ <span class="ml-2">Kết nối tâm hồn qua những trang văn, câu thơ đồng điệu.</span></li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-goldAccent/30 flex justify-between items-center">
+                            <span class="text-xs italic text-gray-500 font-cormorant">Miễn phí sẻ chia</span>
+                            <a href="https://zalo.me/0974089207" target="_blank" class="px-4 py-2 bg-wineRed text-white text-xs font-bold rounded hover:bg-wineLight transition font-cormorant tracking-wider">Tâm Sự Ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. THI ĐÀN & XƯỚNG HỌA (CỘNG ĐỒNG ĐĂNG TẢI TRỰC TIẾP) -->
+            <section id="thidan" class="mb-24 pt-12 border-t-2 border-goldAccent/40">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                    <div>
+                        <span class="text-goldAccent font-semibold tracking-widest uppercase text-sm font-cormorant">✦ GIAO LƯU THƠ CA TRỰC TUYẾN ✦</span>
+                        <h2 class="text-3xl md:text-4xl font-cormorant font-bold text-wineRed mt-1">Thi Đàn & Xướng Họa</h2>
+                    </div>
+                    <button onclick="openSubmitModalWithCategory('Thi Đàn & Xướng Họa')" class="mt-4 md:mt-0 px-6 py-2.5 bg-wineRed text-white font-bold rounded hover:bg-wineLight transition font-cormorant text-sm tracking-wider">
+                        + Xướng Thơ Ngay
+                    </button>
+                </div>
+                <div id="thidanContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Dynamic Rendered Poems -->
+                </div>
+            </section>
+
+            <!-- 3. ĐIỂN TÍCH & ĐIỂN CỐ VĂN HỌC -->
+            <section id="dientich" class="mb-24 pt-12 border-t-2 border-goldAccent/40">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                    <div>
+                        <span class="text-goldAccent font-semibold tracking-widest uppercase text-sm font-cormorant">✦ TRI THỨC CỔ ĐIỂN ✦</span>
+                        <h2 class="text-3xl md:text-4xl font-cormorant font-bold text-wineRed mt-1">Điển Tích & Điển Cố</h2>
+                    </div>
+                    <button onclick="openSubmitModalWithCategory('Điển Tích & Điển Cố')" class="mt-4 md:mt-0 px-6 py-2.5 bg-wineRed text-white font-bold rounded hover:bg-wineLight transition font-cormorant text-sm tracking-wider">
+                        + Đóng Góp Điển Tích
+                    </button>
+                </div>
+                <div id="dientichContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Dynamic Rendered Điển Tích -->
+                </div>
+            </section>
+
+            <!-- 3.5. DẪN CHỨNG VĂN HỌC & NHẬN ĐỊNH -->
+            <section id="danchung" class="mb-24 pt-12 border-t-2 border-goldAccent/40">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                    <div>
+                        <span class="text-goldAccent font-semibold tracking-widest uppercase text-sm font-cormorant">✦ KHO TÀNG DẪN CHỨNG ✦</span>
+                        <h2 class="text-3xl md:text-4xl font-cormorant font-bold text-wineRed mt-1">Dẫn Chứng & Nhận Định Văn Học</h2>
+                    </div>
+                    <button onclick="openSubmitModalWithCategory('Dẫn Chứng & Nhận Định')" class="mt-4 md:mt-0 px-6 py-2.5 bg-wineRed text-white font-bold rounded hover:bg-wineLight transition font-cormorant text-sm tracking-wider">
+                        + Thêm Dẫn Chứng
+                    </button>
+                </div>
+                <div id="danchungContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Dynamic Rendered Dẫn Chứng -->
+                </div>
+            </section>
+
+            <!-- 4. GÓC BÌNH PHẨM & THẨM THẤU CHUYÊN SÂU -->
+            <section id="binhpham" class="mb-24 pt-12 border-t-2 border-goldAccent/40">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                    <div>
+                        <span class="text-goldAccent font-semibold tracking-widest uppercase text-sm font-cormorant">✦ PHÂN TÍCH SÂU SẮC ✦</span>
+                        <h2 class="text-3xl md:text-4xl font-cormorant font-bold text-wineRed mt-1">Góc Bình Phẩm Văn Chương</h2>
+                    </div>
+                    <button onclick="openSubmitModalWithCategory('Góc Bình Phẩm Văn Chương')" class="mt-4 md:mt-0 px-6 py-2.5 bg-wineRed text-white font-bold rounded hover:bg-wineLight transition font-cormorant text-sm tracking-wider">
+                        + Gửi Bài Bình Phẩm
+                    </button>
+                </div>
+                <div id="binhphamContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Dynamic Rendered Bình Phẩm -->
+                </div>
+            </section>
+
+            <!-- 5. TRẮC NGHIỆM KIẾN THỨC VĂN CHƯƠNG (NGÂN HÀNG CÂU HỎI ĐỘNG) -->
+            <section id="tracnghiem" class="mb-24 pt-12 border-t-2 border-goldAccent/40">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-goldAccent font-semibold tracking-widest uppercase text-sm font-cormorant">✦ THỬ TÀI HIỂU BIẾT ✦</span>
+                    <h2 class="text-3xl md:text-4xl font-cormorant font-bold text-wineRed mt-1">Trắc Nghiệm Văn Chương Động</h2>
+                    <div class="w-20 h-1 bg-goldAccent mx-auto mt-2"></div>
+                </div>
+                <div class="bg-parchment p-8 rounded-xl ornate-border max-w-3xl mx-auto">
+                    <div id="quizContainer">
+                        <div class="flex justify-between items-center mb-2">
+                            <span id="quizProgress" class="text-xs text-goldAccent font-semibold uppercase">Câu hỏi 1 / 5</span>
+                            <span id="quizScore" class="text-xs font-bold text-wineRed">Điểm: 0</span>
+                        </div>
+                        <h3 id="quizQuestion" class="text-xl font-cormorant font-bold text-wineRed mb-4">Đang tải câu hỏi...</h3>
+                        <div class="space-y-3" id="quizOptions">
+                            <!-- Options generated dynamically -->
+                        </div>
+                        <div id="quizResult" class="mt-4 font-bold text-sm hidden"></div>
+                        <div id="quizNextBtnContainer" class="mt-6 text-right hidden">
+                            <button onclick="nextQuizQuestion()" class="px-6 py-2 bg-wineRed text-white font-bold rounded hover:bg-wineLight transition text-sm font-cormorant">Câu hỏi tiếp theo →</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. GÓC SÁNG TÁC & DIỄN ĐÀN CỘNG ĐỒNG -->
+            <section id="sangtac" class="mb-16 pt-12 border-t-2 border-goldAccent/40">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-12">
+                    <div>
+                        <span class="text-goldAccent font-semibold tracking-widest uppercase text-sm font-cormorant">✦ SÂN CHƠI THƯ PHÁP & VĂN CHƯƠNG ✦</span>
+                        <h2 class="text-3xl md:text-4xl font-cormorant font-bold text-wineRed mt-1">Góc Sáng Tác & Bút Ký</h2>
+                    </div>
+                    <button onclick="openSubmitModalWithCategory('Góc Sáng Tác & Bút Ký')" class="mt-4 md:mt-0 px-6 py-3 bg-wineRed text-white font-bold rounded-md hover:bg-wineLight transition shadow-lg font-cormorant text-lg tracking-wider">
+                        + Đăng Bài Viết Của Bạn
+                    </button>
+                </div>
+
+                <!-- Approved Posts Container -->
+                <div id="sangtacContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Loaded dynamically via JS -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-wineDark text-white py-12 border-t-4 border-goldAccent">
+        <div class="container mx-auto px-6 text-center">
+            <h3 class="text-3xl font-cormorant font-bold text-goldLight mb-3">Văn Uyển Kỳ Thư</h3>
+            <p class="text-white/80 font-calligraphy text-2xl italic mb-6">"Nơi kết nối tri thức văn chương và bồi đắp tâm hồn Việt."</p>
+            <p class="text-sm text-goldLight/80 font-cormorant">Hỗ trợ nhanh qua Zalo: <strong class="text-white">0974.089.207</strong></p>
+            <p class="text-xs text-white/50 mt-8 font-lora">© 2026 Văn Uyển Kỳ Thư. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- FLOATING ZALO BUTTON -->
+    <a href="https://zalo.me/0974089207" target="_blank" class="fixed bottom-6 right-6 z-40 bg-blue-600 text-white p-4 rounded-full shadow-2xl hover:bg-blue-700 transition flex items-center justify-center space-x-2 group" title="Chat Zalo: 0974089207">
+        <span class="text-xl font-bold">Zalo</span>
+        <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out text-sm font-semibold">0974089207</span>
+    </a>
+    <!-- MODAL: GỬI BÀI SÁNG TÁC / ĐÓNG GÓP -->
+    <div id="submitModal" class="fixed inset-0 z-50 bg-black/60 hidden flex items-center justify-center p-4">
+        <div class="bg-parchment rounded-xl max-w-lg w-full p-8 ornate-border shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeSubmitModal()" class="absolute top-4 right-4 text-gray-500 hover:text-black text-xl font-bold">×</button>
+            <h3 class="text-2xl font-cormorant font-bold text-wineRed mb-2">Đóng Góp Bài Viết & Nội Dung</h3>
+            <p class="text-xs text-gray-600 mb-6 font-lora">Bài viết sẽ được gửi đến Quản trị viên để kiểm duyệt và xuất bản vào đúng chuyên mục tương ứng.</p>
+            <form id="submitPostForm" onsubmit="handleUserSubmitPost(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-wineRed font-cormorant">Họ tên / Bút danh:</label>
+                    <input type="text" id="postAuthor" required class="w-full px-3 py-2 border border-goldAccent/60 rounded bg-white text-sm" placeholder="Nhập tên của bạn...">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-wineRed font-cormorant">Tiêu đề bài viết:</label>
+                    <input type="text" id="postTitle" required class="w-full px-3 py-2 border border-goldAccent/60 rounded bg-white text-sm" placeholder="Nhập tiêu đề...">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-wineRed font-cormorant">Chọn Chuyên Mục:</label>
+                    <select id="postCategory" class="w-full px-3 py-2 border border-goldAccent/60 rounded bg-white text-sm">
+                        <option value="Thi Đàn & Xướng Họa">Thi Đàn & Xướng Họa</option>
+                        <option value="Điển Tích & Điển Cố">Điển Tích & Điển Cố</option>
+                        <option value="Dẫn Chứng & Nhận Định">Dẫn Chứng & Nhận Định</option>
+                        <option value="Góc Bình Phẩm Văn Chương">Góc Bình Phẩm Văn Chương</option>
+                        <option value="Góc Sáng Tác & Bút Ký">Góc Sáng Tác & Bút Ký</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1 text-wineRed font-cormorant">Nội dung / Trích đoạn / Thơ:</label>
+                    <textarea id="postContent" rows="5" required class="w-full px-3 py-2 border border-goldAccent/60 rounded bg-white text-sm" placeholder="Nhập nội dung bài viết, thơ hoặc điển tích..."></textarea>
+                </div>
+                <button type="submit" class="w-full py-3 bg-wineRed text-white font-bold rounded hover:bg-wineLight transition font-cormorant text-lg tracking-wider">Gửi Kiểm Duyệt</button>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- MODAL: ADMIN LOGIN & DASHBOARD -->
+    <div id="adminModal" class="fixed inset-0 z-50 bg-black/60 hidden items-center justify-center p-4">
+        <div class="bg-parchment rounded-xl max-w-3xl w-full p-8 ornate-border shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button type="button" onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-500 hover:text-black text-xl font-bold" aria-label="Đóng">×</button>
+
+            <div id="adminLoginForm">
+                <h3 class="text-2xl font-cormorant font-bold text-wineRed mb-2">Đăng nhập Quản trị viên</h3>
+                <p class="text-sm text-gray-600 mb-5">Nhập mật khẩu quản trị để duyệt, xóa bài viết và quản lý nội dung.</p>
+                <form onsubmit="event.preventDefault(); verifyAdmin();" class="space-y-4">
+                    <input id="adminPasswordInput" type="password" autocomplete="current-password"
+                           class="w-full px-3 py-2 border border-goldAccent/60 rounded bg-white"
+                           placeholder="Mật khẩu quản trị" required>
+                    <button type="submit" class="w-full py-3 bg-wineRed text-white font-bold rounded hover:bg-wineLight transition">
+                        Đăng nhập
+                    </button>
+                </form>
+                <p class="text-xs text-gray-500 mt-3">Mật khẩu mặc định: <strong>admin123</strong></p>
+            </div>
+
+            <div id="adminDashboard" class="hidden">
+                <div class="flex items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h3 class="text-2xl font-cormorant font-bold text-wineRed">Bảng điều khiển</h3>
+                        <p class="text-sm text-gray-600">Quản lý các bài viết đang chờ kiểm duyệt.</p>
+                    </div>
+                    <button type="button" onclick="logoutAdmin()" class="px-4 py-2 border border-wineRed text-wineRed rounded hover:bg-wineRed hover:text-white transition">
+                        Đăng xuất
+                    </button>
+                </div>
+
+                <div class="mb-8">
+                    <h4 class="font-bold text-wineRed mb-3">Bài viết chờ duyệt</h4>
+                    <div id="pendingPostsList" class="space-y-3"></div>
+                </div>
+
+                <div class="border-t border-goldAccent/30 pt-6">
+                    <h4 class="font-bold text-wineRed mb-3">Đổi mật khẩu quản trị</h4>
+                    <div class="grid md:grid-cols-3 gap-3">
+                        <input id="currentPassInput" type="password" autocomplete="current-password"
+                               class="px-3 py-2 border border-goldAccent/60 rounded bg-white text-sm"
+                               placeholder="Mật khẩu hiện tại">
+                        <input id="newPassInput" type="password" autocomplete="new-password"
+                               class="px-3 py-2 border border-goldAccent/60 rounded bg-white text-sm"
+                               placeholder="Mật khẩu mới">
+                        <input id="confirmPassInput" type="password" autocomplete="new-password"
+                               class="px-3 py-2 border border-goldAccent/60 rounded bg-white text-sm"
+                               placeholder="Nhập lại mật khẩu">
+                    </div>
+                    <button type="button" onclick="changeAdminPassword()" class="mt-3 px-5 py-2 bg-wineRed text-white rounded hover:bg-wineLight transition">
+                        Đổi mật khẩu
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thông báo -->
+    <div id="toastMessage" class="fixed top-5 right-5 z-[70] hidden max-w-md bg-wineDark text-white px-5 py-3 rounded-lg shadow-2xl border border-goldAccent">
+        <span id="toastMessageText"></span>
+    </div>
+
+    <!-- Hộp xác nhận -->
+    <div id="confirmModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/60 p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 shadow-2xl border-2 border-goldAccent">
+            <h3 class="text-xl font-cormorant font-bold text-wineRed mb-2">Xác nhận</h3>
+            <p id="confirmMessage" class="text-gray-700 mb-6"></p>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeConfirm()" class="px-4 py-2 border rounded">Hủy</button>
+                <button type="button" id="confirmOkBtn" class="px-4 py-2 bg-wineRed text-white rounded">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function showMsg(message) {
+            const modal = document.getElementById('toastMessage');
+            const textEl = document.getElementById('toastMessageText');
+            if (!modal || !textEl) {
+                alert(message);
+                return;
+            }
+            textEl.textContent = message;
+            modal.classList.remove('hidden');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => modal.classList.add('hidden'), 3500);
+        }
+
+        function showConfirm(message, callback) {
+            const modal = document.getElementById('confirmModal');
+            const messageEl = document.getElementById('confirmMessage');
+            const okBtn = document.getElementById('confirmOkBtn');
+            if (!modal || !messageEl || !okBtn) {
+                if (window.confirm(message)) callback();
+                return;
+            }
+            messageEl.textContent = message;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            okBtn.onclick = function () {
+                closeConfirm();
+                callback();
+            };
+        }
+
+        function closeConfirm() {
+            const modal = document.getElementById('confirmModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+
+        // --- TRẮC NGHIỆM VĂN CHƯƠNG (NGÂN HÀNG CÂU HỎI ĐỘNG) ---
+        const quizBank = [
+            {
+                q: "Tác phẩm 'Truyện Kiều' của đại thi hào Nguyễn Du được viết theo thể thơ nào chủ đạo?",
+                options: ["Thơ Đường luật 7 chữ", "Thể thơ Lục bát truyền thống", "Thể thơ Song thất lục bát", "Thơ tự do không vần"],
+                correct: 1,
+                explanation: "Chính xác! Thể thơ Lục bát là linh hồn của Truyện Kiều và ca dao dân tộc."
+            },
+            {
+                q: "Nhân vật Chí Phèo trong tác phẩm cùng tên của nhà văn Nam Cao vốn là dân ngụ cư ở làng nào?",
+                options: ["Làng Vũ Đại", "Làng Đüm", "Làng Chợ Dừa", "Làng Yên Thế"],
+                correct: 0,
+                explanation: "Chính xác! Chí Phèo sinh sống và gây giông bão tại làng Vũ Đại."
+            },
+            {
+                q: "Bài thơ 'Sóng' của nữ thi sĩ Xuân Quỳnh được sáng tác năm nào và in trong tập thơ nào?",
+                options: ["Năm 1967, tập Hoa dọc chiến hào", "Năm 1970, tập Tự hát", "Năm 1965, tập Gió Lào cát trắng", "Năm 1975, tập Sân ga chiều"],
+                correct: 0,
+                explanation: "Chính xác! Bài thơ Sóng ra đời năm 1967 trên chuyến đi thực tế vùng biển Quảng Ninh, in trong tập 'Hoa dọc chiến hào' (1968)."
+            },
+            {
+                q: "Câu nói nổi tiếng: 'Văn học là nhân học' là quan điểm của nhà văn lỗi lạc nào?",
+                options: ["Nam Cao", "Thạch Lam", "M. Gorky", "Lép Tôn-xtôi"],
+                correct: 2,
+                explanation: "Chính xác! Maxim Gorky đã khẳng định triết lý sâu sắc: 'Văn học là nhân học'."
+            },
+            {
+                q: "Trong bài thơ 'Tây Tiến' của Quang Dũng, hình ảnh nào khắc họa đậm nét vẻ đẹp bi tráng của người lính?",
+                options: ["Áo chiến bào thay chiếu anh về đất", "Đêm mơ Hà Nội dáng kiều thơm", "Tây Tiến đoàn binh không mọc tóc", "Cả 3 đáp án trên đều đúng"],
+                correct: 3,
+                explanation: "Chính xác! Cả 3 hình ảnh trên đều kết hợp thành bản hùng ca bi tráng bất tử về người lính Tây Tiến."
+            },
+            {
+                q: "Đâu là tác giả của đoạn trích 'Bếp lửa' nổi tiếng gợi nhắc tình bà cháu sâu nặng?",
+                options: ["Bằng Việt", "Xuân Quỳnh", "Tố Hữu", "Huy Cận"],
+                correct: 0,
+                explanation: "Chính xác! 'Bếp lửa' là sáng phẩm xúc động của nhà thơ Bằng Việt."
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+
+        function loadQuizQuestion() {
+            if (currentQuizIndex >= quizBank.length) {
+                currentQuizIndex = 0; // Xoay vòng liên tục
+                quizScore = 0;
+            }
+            const qData = quizBank[currentQuizIndex];
+            document.getElementById('quizProgress').innerText = `Câu hỏi ${currentQuizIndex + 1} / ${quizBank.length}`;
+            document.getElementById('quizScore').innerText = `Điểm: ${quizScore}`;
+            document.getElementById('quizQuestion').innerText = qData.q;
+            
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = qData.options.map((opt, idx) => `
+                <button onclick="handleQuizAnswer(${idx}, ${qData.correct}, '${qData.explanation}')" class="w-full text-left p-3 rounded border border-goldAccent/50 bg-white hover:bg-goldAccent/10 transition text-sm quiz-option-btn">${String.fromCharCode(65 + idx)}. ${opt}</button>
+            `).join('');
+
+            document.getElementById('quizResult').classList.add('hidden');
+            document.getElementById('quizNextBtnContainer').classList.add('hidden');
+        }
+
+        function handleQuizAnswer(selectedIdx, correctIdx, explanation) {
+            const btns = document.querySelectorAll('.quiz-option-btn');
+            btns.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === correctIdx) {
+                    btn.classList.add('bg-green-100', 'border-green-600', 'font-bold');
+                } else if (idx === selectedIdx && selectedIdx !== correctIdx) {
+                    btn.classList.add('bg-red-100', 'border-red-600');
+                }
+            });
+
+            const res = document.getElementById('quizResult');
+            res.classList.remove('hidden');
+            if (selectedIdx === correctIdx) {
+                quizScore += 10;
+                res.className = 'mt-4 font-bold text-sm text-green-700';
+                res.innerHTML = `✨ ${explanation}`;
+            } else {
+                res.className = 'mt-4 font-bold text-sm text-red-700';
+                res.innerHTML = `❌ Chưa chính xác! ${explanation}`;
+            }
+            document.getElementById('quizScore').innerText = `Điểm: ${quizScore}`;
+            document.getElementById('quizNextBtnContainer').classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            currentQuizIndex++;
+            loadQuizQuestion();
+        }
+
+        // Khởi động trắc nghiệm
+        loadQuizQuestion();
+
+        // --- LOCALSTORAGE & DYNAMIC POSTS SYSTEM FOR ALL CATEGORIES ---
+        const STORAGE_KEY_POSTS = 'van_uyen_posts_v6';
+
+        function initPosts() {
+            if (!localStorage.getItem(STORAGE_KEY_POSTS)) {
+                const defaultPosts = [
+                    {
+                        id: 1,
+                        title: 'Đêm Thu Vọng Nguyệt',
+                        author: 'Sưu tầm',
+                        category: 'Thi Đàn & Xướng Họa',
+                        content: 'Trăng soi bóng nước lạnh lùng trôi,\nGió thoảng hương thu gợi nhớ ai.\nNon nước ngút ngàn mờ khói tỏa,\nMấy vần thơ cũ gửi cho đời.',
+                        status: 'approved'
+                    },
+                    {
+                        id: 2,
+                        title: 'Khúc Chiều Mùa Hạ',
+                        author: 'Lan Chi',
+                        category: 'Thi Đàn & Xướng Họa',
+                        content: 'Con đi suốt mấy dặm đường dài,\nMới hiểu lòng quê nặng tháng năm...',
+                        status: 'approved'
+                    },
+                    {
+                        id: 3,
+                        title: '1. Lầu Tần (Tần Lầu)',
+                        author: 'Ban Biên Tập',
+                        category: 'Điển Tích & Điển Cố',
+                        content: 'Chỉ gác cao, cung điện thâm nghiêm hoặc chốn lầu xanh trong thơ ca cổ, biểu tượng cho sự xa cách, hoài niệm hoặc chốn phồn hoa.',
+                        status: 'approved'
+                    },
+                    {
+                        id: 4,
+                        title: '2. Gót Chân Achilles',
+                        author: 'Ban Biên Tập',
+                        category: 'Điển Tích & Điển Cố',
+                        content: 'Điển tích Hy Lạp chỉ điểm yếu chí mạng của một cá nhân, hệ thống hay tổ chức dẫu bề ngoài có mạnh mẽ đến đâu.',
+                        status: 'approved'
+                    },
+                    {
+                        id: 5,
+                        title: 'Nhận Định Về Nam Cao & Chí Phèo',
+                        author: 'Hội Văn Học',
+                        category: 'Dẫn Chứng & Nhận Định',
+                        content: '"Nam Cao đã dũng cảm vạch trần bộ mặt tàn ác của xã hội thực dân phong kiến đè nén con người, đồng thời phát hiện ra bản chất lương thiện cao đẹp ẩn giấu sâu kín bên trong những kẻ cùng đường."',
+                        status: 'approved'
+                    },
+                    {
+                        id: 6,
+                        title: 'Ánh Sáng Nhân Tính Trong Chí Phèo',
+                        author: 'Hà An',
+                        category: 'Góc Bình Phẩm Văn Chương',
+                        content: 'Chí Phèo không đơn thuần là tiếng kêu cứu đòi làm người, mà còn là bản cáo trạng đanh thép về xã hội tàn nhẫn bóp nghẹt phần con lẫn phần người...',
+                        status: 'approved'
+                    },
+                    {
+                        id: 7,
+                        title: 'Sự Lặng Lẽ Của Yêu Thương',
+                        author: 'Minh Quân',
+                        category: 'Góc Sáng Tác & Bút Ký',
+                        content: 'Trong bộn bề cuộc sống hiện đại, đôi khi chúng ta quên mất sức mạnh của một ánh nhìn thấu cảm và những trang văn chữa lành tâm hồn...',
+                        status: 'approved'
+                    }
+                ];
+                localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(defaultPosts));
+            }
+        }
+        initPosts();
+
+        function getPosts() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY_POSTS)) || [];
+        }
+
+        function savePosts(posts) {
+            localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(posts));
+            renderAllSections();
+        }
+
+        function renderAllSections() {
+            const posts = getPosts().filter(p => p.status === 'approved');
+
+            // 1. Thi Đàn & Xướng Họa
+            const thidanEl = document.getElementById('thidanContainer');
+            const thidanPosts = posts.filter(p => p.category === 'Thi Đàn & Xướng Họa');
+            if (thidanPosts.length === 0) {
+                thidanEl.innerHTML = '<p class="text-gray-500 italic col-span-2 text-center font-cormorant text-lg">Chưa có bài thơ nào được đăng tải.</p>';
+            } else {
+                thidanEl.innerHTML = thidanPosts.map(p => `
+                    <div class="bg-parchment p-8 rounded-xl ornate-border">
+                        <span class="text-xs text-goldAccent font-semibold uppercase font-cormorant">Thơ Xướng Họa Cộng Đồng</span>
+                        <h3 class="text-2xl font-cormorant font-bold text-wineRed mt-1 mb-3">${p.title}</h3>
+                        <p class="text-gray-700 italic font-lora leading-relaxed mb-4 whitespace-pre-line">"${p.content}"</p>
+                        <div class="flex justify-between items-center text-xs text-gray-500 border-t border-goldAccent/30 pt-3 font-cormorant">
+                            <span>Tác giả: ${p.author}</span>
+                            <span class="text-green-700 font-semibold">Đã xuất bản</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // 2. Điển Tích & Điển Cố
+            const dientichEl = document.getElementById('dientichContainer');
+            const dientichPosts = posts.filter(p => p.category === 'Điển Tích & Điển Cố');
+            if (dientichPosts.length === 0) {
+                dientichEl.innerHTML = '<p class="text-gray-500 italic col-span-3 text-center font-cormorant text-lg">Chưa có điển tích nào.</p>';
+            } else {
+                dientichEl.innerHTML = dientichPosts.map(p => `
+                    <div class="bg-parchment p-6 rounded-lg ornate-border">
+                        <h3 class="text-xl font-cormorant font-bold text-wineRed mb-2">${p.title}</h3>
+                        <p class="text-gray-700 text-sm font-lora leading-relaxed mb-3">${p.content}</p>
+                        <div class="text-xs text-gray-500 italic text-right font-cormorant">Đóng góp: ${p.author}</div>
+                    </div>
+                `).join('');
+            }
+
+            // 3. Dẫn Chứng & Nhận Định
+            const danchungEl = document.getElementById('danchungContainer');
+            const danchungPosts = posts.filter(p => p.category === 'Dẫn Chứng & Nhận Định');
+            if (danchungPosts.length === 0) {
+                danchungEl.innerHTML = '<p class="text-gray-500 italic col-span-2 text-center font-cormorant text-lg">Chưa có dẫn chứng nào.</p>';
+            } else {
+                danchungEl.innerHTML = danchungPosts.map(p => `
+                    <div class="bg-parchment p-6 rounded-lg ornate-border">
+                        <h3 class="text-lg font-cormorant font-bold text-wineRed mb-2">${p.title}</h3>
+                        <p class="text-gray-700 text-sm italic font-lora leading-relaxed mb-3">"${p.content}"</p>
+                        <div class="text-xs text-gray-500 text-right font-cormorant">Sưu tầm bởi: ${p.author}</div>
+                    </div>
+                `).join('');
+            }
+
+            // 4. Góc Bình Phẩm Văn Chương
+            const binhphamEl = document.getElementById('binhphamContainer');
+            const binhphamPosts = posts.filter(p => p.category === 'Góc Bình Phẩm Văn Chương');
+            if (binhphamPosts.length === 0) {
+                binhphamEl.innerHTML = '<p class="text-gray-500 italic col-span-2 text-center font-cormorant text-lg">Chưa có bài bình phẩm nào.</p>';
+            } else {
+                binhphamEl.innerHTML = binhphamPosts.map(p => `
+                    <div class="bg-parchment p-8 rounded-xl ornate-border">
+                        <span class="text-xs text-goldAccent font-semibold uppercase font-cormorant">Bình Phẩm Chuyên Sâu</span>
+                        <h3 class="text-2xl font-cormorant font-bold text-wineRed mt-1 mb-3">${p.title}</h3>
+                        <p class="text-gray-700 text-sm font-lora leading-relaxed mb-4">${p.content}</p>
+                        <div class="flex justify-between items-center text-xs text-gray-500 border-t border-goldAccent/30 pt-3 font-cormorant">
+                            <span>Tác giả: ${p.author}</span>
+                            <span class="text-green-700 font-semibold">Đã kiểm duyệt</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // 5. Góc Sáng Tác & Bút Ký
+            const sangtacEl = document.getElementById('sangtacContainer');
+            const sangtacPosts = posts.filter(p => p.category === 'Góc Sáng Tác & Bút Ký');
+            if (sangtacPosts.length === 0) {
+                sangtacEl.innerHTML = '<p class="text-gray-500 italic col-span-3 text-center font-cormorant text-lg">Chưa có bài sáng tác nào.</p>';
+            } else {
+                sangtacEl.innerHTML = sangtacPosts.map(p => `
+                    <div class="bg-parchment p-6 rounded-lg ornate-border shadow-sm flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-semibold text-goldAccent uppercase tracking-wider font-cormorant">${p.category}</span>
+                            <h3 class="text-xl font-cormorant font-bold text-wineRed mt-1 mb-2">${p.title}</h3>
+                            <p class="text-gray-700 text-sm italic mb-4 font-lora">"${p.content}"</p>
+                        </div>
+                        <div class="flex justify-between items-center text-xs text-gray-500 border-t border-goldAccent/30 pt-3 mt-2 font-cormorant">
+                            <span>Tác giả: ${p.author}</span>
+                            <span class="text-green-700 font-semibold">Đã xuất bản</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        renderAllSections();
+
+        function openSubmitModal() {
+            document.getElementById('submitModal').classList.remove('hidden');
+        }
+
+        function openSubmitModalWithCategory(categoryName) {
+            document.getElementById('postCategory').value = categoryName;
+            document.getElementById('submitModal').classList.remove('hidden');
+        }
+
+        function closeSubmitModal() {
+            document.getElementById('submitModal').classList.add('hidden');
+        }
+
+        function handleUserSubmitPost(e) {
+            e.preventDefault();
+            const title = document.getElementById('postTitle').value;
+            const author = document.getElementById('postAuthor').value;
+            const category = document.getElementById('postCategory').value;
+            const content = document.getElementById('postContent').value;
+
+            const posts = getPosts();
+            const newPost = {
+                id: Date.now(),
+                title,
+                author,
+                category,
+                content,
+                status: 'pending'
+            };
+
+            posts.push(newPost);
+            localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(posts));
+
+            showMsg('Bài viết của bạn đã được gửi thành công! Quản trị viên sẽ xem xét và duyệt xuất bản vào chuyên mục sớm nhất.');
+            document.getElementById('submitPostForm').reset();
+            closeSubmitModal();
+        }
+
+        // --- ADMIN SYSTEM & PASSWORD CHANGE ---
+        const ADMIN_PASS_KEY = 'van_uyen_admin_pass';
+
+        function getAdminPassword() {
+            return localStorage.getItem(ADMIN_PASS_KEY) || 'admin123';
+        }
+
+        function openAdminModal() {
+            const modal = document.getElementById('adminModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                showAdminDashboard();
+            }
+        }
+        function closeAdminModal() {
+            const modal = document.getElementById('adminModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function verifyAdmin() {
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === getAdminPassword()) {
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                showAdminDashboard();
+            } else {
+                showMsg('Mật khẩu quản trị không chính xác! (Mật khẩu mặc định: admin123)');
+            }
+        }
+
+        function changeAdminPassword() {
+            const currentPass = document.getElementById('currentPassInput').value;
+            const newPass = document.getElementById('newPassInput').value;
+            const confirmPass = document.getElementById('confirmPassInput').value;
+
+            if (currentPass !== getAdminPassword()) {
+                showMsg('Mật khẩu hiện tại không chính xác!');
+                return;
+            }
+            if (!newPass || newPass.length < 3) {
+                showMsg('Mật khẩu mới phải có ít nhất 3 ký tự!');
+                return;
+            }
+            if (newPass !== confirmPass) {
+                showMsg('Mật khẩu xác nhận không khớp với mật khẩu mới!');
+                return;
+            }
+
+            localStorage.setItem(ADMIN_PASS_KEY, newPass);
+            showMsg('Đổi mật khẩu quản trị thành công!');
+            document.getElementById('currentPassInput').value = '';
+            document.getElementById('newPassInput').value = '';
+            document.getElementById('confirmPassInput').value = '';
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('adminLoginForm').classList.add('hidden');
+            document.getElementById('adminDashboard').classList.remove('hidden');
+            renderPendingPostsAdmin();
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('isAdminLoggedIn');
+            document.getElementById('adminLoginForm').classList.remove('hidden');
+            document.getElementById('adminDashboard').classList.add('hidden');
+            document.getElementById('adminPasswordInput').value = '';
+        }
+
+        function renderPendingPostsAdmin() {
+            const container = document.getElementById('pendingPostsList');
+            const posts = getPosts();
+            const pending = posts.filter(p => p.status === 'pending');
+
+            if (pending.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 italic text-sm">Không có bài viết nào đang chờ duyệt.</p>';
+                return;
+            }
+
+            container.innerHTML = pending.map(p => `
+                <div class="bg-gray-50 p-4 rounded border border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">${p.category}</span>
+                        <h4 class="font-bold text-lg text-wineRed mt-1">${p.title}</h4>
+                        <p class="text-xs text-gray-600">Tác giả: <strong>${p.author}</strong></p>
+                        <p class="text-sm text-gray-700 mt-1 italic whitespace-pre-line">"${p.content}"</p>
+                    </div>
+                    <div class="flex space-x-2 shrink-0">
+                        <button onclick="approvePost(${p.id})" class="px-3 py-1.5 bg-green-600 text-white text-xs font-bold rounded hover:bg-green-700 transition">Duyệt</button>
+                        <button onclick="deletePost(${p.id})" class="px-3 py-1.5 bg-red-600 text-white text-xs font-bold rounded hover:bg-red-700 transition">Xóa</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function approvePost(id) {
+            let posts = getPosts();
+            posts = posts.map(p => p.id === id ? { ...p, status: 'approved' } : p);
+            localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(posts));
+            renderAllSections();
+            renderPendingPostsAdmin();
+            showMsg('Đã duyệt và xuất bản bài viết thành công!');
+        }
+
+        function deletePost(id) {
+            showConfirm('Bạn có chắc chắn muốn xóa/từ chối bài viết này?', function() {
+                let posts = getPosts();
+                posts = posts.filter(p => p.id !== id);
+                localStorage.setItem(STORAGE_KEY_POSTS, JSON.stringify(posts));
+                renderAllSections();
+                renderPendingPostsAdmin();
+            });
+        }
+    </script>
+</body>
+</html>
